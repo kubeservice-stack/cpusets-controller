@@ -125,7 +125,7 @@ func DeterminePoolConfig(k8sclient k8sclient.Interface, fileMatch, nodeName stri
 }
 
 func parsePoolConfigs(labelMap map[string]string, fileMatch string) (PoolConfig, error) {
-	poolConfs, err := readAllPoolConfigs(fileMatch)
+	poolConfs, err := ReadAllPoolConfigs(fileMatch)
 	if err != nil {
 		typesLogger.Error("Parse configuration file", logger.Error(err))
 		return PoolConfig{}, err
@@ -147,8 +147,8 @@ func parsePoolConfigs(labelMap map[string]string, fileMatch string) (PoolConfig,
 	return PoolConfig{}, ErrNotMatchPoolConfig
 }
 
-//readAllPoolConfigs reads all the CPU pools configured in the cluster, and returns them to the user in one big array
-func readAllPoolConfigs(fileMatch string) ([]PoolConfig, error) {
+//ReadAllPoolConfigs reads all the CPU pools configured in the cluster, and returns them to the user in one big array
+func ReadAllPoolConfigs(fileMatch string) ([]PoolConfig, error) {
 	files, err := filepath.Glob(filepath.Join(PoolConfigDir, fileMatch))
 	if err != nil {
 		typesLogger.Error("filepath glob parse error!", logger.Error(err))
