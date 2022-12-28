@@ -1,4 +1,6 @@
 # Cpusets Controller
+[![Docker publish](https://github.com/kubeservice-stack/cpusets-controller/actions/workflows/ci.yml/badge.svg)](https://github.com/kubeservice-stack/cpusets-controller/actions/workflows/ci.yml)
+
 Cpusets Controller 提供一种 Kubernetes 的设备插件，它将 CPU 内核作为可消耗设备公开给 Kubernetes 调度程序.
 
 支持三种类型的 CPU 管理：
