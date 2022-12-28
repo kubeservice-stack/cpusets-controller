@@ -21,7 +21,7 @@ defaults:
 
 jobs:
   generate-jobs:
-    name: customlimitrange-manager-build
+    name: cpusets-controller-build
     runs-on: ubuntu-latest
     strategy: 
       fail-fast: false
