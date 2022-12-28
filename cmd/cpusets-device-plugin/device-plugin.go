@@ -163,7 +163,7 @@ func (cdm *cpuDeviceManager) Allocate(ctx context.Context, rqt *pluginapi.Alloca
 			envmap["EXCLUSIVE_CPUS"] = cpusAllocated.String()
 		}
 		containerResp := new(pluginapi.ContainerAllocateResponse)
-		mainLogger.Info("CPUs allocated: " + cpusAllocated.String() + ": Num of CPUs %s" +
+		mainLogger.Info("CPUs allocated: " + cpusAllocated.String() + ": Num of CPUs " +
 			strconv.Itoa(cpusAllocated.Size()))
 
 		containerResp.Envs = envmap

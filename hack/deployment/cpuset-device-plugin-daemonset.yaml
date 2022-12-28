@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cpusets-device-plugin
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cpusets-device-plugin
+rules:
+- apiGroups: [""]
+  resources: ["pods", "nodes"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cpusets-device-plugin
+subjects:
+- kind: ServiceAccount
+  name: cpusets-device-plugin
+  namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: cpusets-device-plugin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: cpusets-device-plugin
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      name: cpusets-device-plugin
+  template:
+    metadata:
+      labels:
+        name: cpusets-device-plugin
+    spec:
+      containers:
+      - name: cpusets-device-plugin 
+        image: dongjiang1989/cpusets-device-plugin:latest
+        imagePullPolicy: IfNotPresent
+        command: [ "/cpusets-device-plugin" ]
+        volumeMounts:
+         - mountPath: /etc/cpusets-pool
+           name: cpusets-configmaps
+         - mountPath: /var/lib/kubelet/device-plugins/ 
+           name: devicesock 
+           readOnly: false
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: FILE_MATCH
+          value: "cpusets-*.yaml"
+      volumes:
+      - name: devicesock 
+        hostPath:
+         # directory location on host
+         path: /var/lib/kubelet/device-plugins/
+      - name: cpusets-configmaps
+        configMap:
+          name: cpusets-configmaps
+      serviceAccountName: cpusets-device-plugin

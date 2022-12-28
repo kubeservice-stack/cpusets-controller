@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cpusets-controller
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cpusets-controller
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cpusets-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cpusets-controller
+subjects:
+- kind: ServiceAccount
+  name: cpusets-controller
+  namespace: kube-system
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: cpusets-controller
+  namespace: kube-system
+  labels:
+    app: cpusets-controller
+spec:
+  selector:
+    matchLabels:
+      name: cpusets-controller
+  template:
+    metadata:
+      labels:
+        name: cpusets-controller
+    spec:
+      containers:
+      - name: cpusets-controller
+        image: dongjiang1989/cpusets-controller:latest
+        imagePullPolicy: Always
+        ##--cpusetroot needs to be set to the root of the cgroupfs hierarchy used by Kubelet for workloads
+        command: [ "/cpusets-controller", "--poolconfigs=/etc/cpusets-pool", "--cpusetroot=/rootfs/sys/fs/cgroup/cpuset/kubepods/" ]
+        resources:
+          requests:
+            cpu: "64m"
+        volumeMounts:
+         - name: time-mount
+           mountPath: /etc/localtime
+           readOnly: true
+         - mountPath: /etc/cpusets-pool
+           name: cpusets-configmaps
+        ## -- do not mount kubepods under /sys to avoid circular linking
+         - mountPath: /rootfs/sys/fs/cgroup/cpuset/kubepods/
+           name: kubepods
+         - mountPath: /var/lib/kubelet/device-plugins/
+           name: checkpointfile
+           readOnly: true
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: FILE_MATCH
+          value: "cpusets-*.yaml"
+        securityContext:
+          privileged: true
+      volumes:
+      - name: time-mount
+        hostPath:
+          path: /etc/localtime
+      ## CPUSetter parses the Kubelet checkpoint file for Device allocations
+      - name: checkpointfile
+        hostPath:
+         path: /var/lib/kubelet/device-plugins/
+      - name: kubepods
+        hostPath:
+         path: /sys/fs/cgroup/cpuset/
+      ## The pool configuration files need to be mounted here
+      - name: cpusets-configmaps
+        configMap:
+          name: cpusets-configmaps
+      serviceAccountName: cpusets-controller

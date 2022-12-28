@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cpusets-test
+  annotations:
+    cmss.cn/cpus: |
+      [{
+      "container": "exclusivetestcontainer",
+      "processes":
+        [{
+           "process": "/bin/sh",
+           "args": ["-c","/thread_busyloop -n \"Process \"1"],
+           "cpus": 1,
+           "pool": "exclusive"
+         },
+         {
+           "process": "/bin/sh",
+           "args": ["-c", "/thread_busyloop -n \"Process \"2"],
+           "pool": "exclusive",
+           "cpus": 1
+         },
+         {
+           "process": "/bin/sh",
+           "args": ["-c", "/thread_busyloop -n \"Process \"3"],
+           "pool": "shared",
+           "cpus": 1
+         } 
+      ]
+      }]
+spec:
+  containers:
+  - name: sharedtestcontainer
+    command: [ "/bin/sh", "-c", "--" ]
+    args: [ "while true; do sleep 1; done;" ]
+    image: dongjiang1989/busyloop:latest
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 80
+    resources:
+      requests:
+        memory: 100Mi
+        cmss.cn/shared: "1"
+      limits:
+        cmss.cn/shared: "1"
+        memory: 100Mi
+  - name: exclusivetestcontainer
+    image: dongjiang1989/busyloop:latest
+    command: [ "/bin/sh", "-c", "--" ]
+    args: [ "while true; do sleep 1; done;" ]
+    imagePullPolicy: Always
+    resources:
+      requests:
+        memory: 100Mi
+        cmss.cn/exclusive: "1"
+      limits:
+        memory: 100Mi
+        cmss.cn/exclusive: "1"
+  - name: defaulttestcontainer
+    command: [ "/bin/sh", "-c", "--" ]
+    args: [ "while true; do sleep 1; done;" ]
+    image: dongjiang1989/busyloop:latest
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 80

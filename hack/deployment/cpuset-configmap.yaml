@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cpusets-configmaps
+  namespace: kube-system
+data:
+  cpusets-kcs-cpu-test-s-wht2b.yaml: |
+    pools: 
+      exclusive:
+        cpus : "2-3"
+      shared:
+        cpus : "1"
+      default:
+        cpus: "0"
+    nodeSelector:
+      kubernetes.io/hostname : kcs-cpu-test-s-wht2b
