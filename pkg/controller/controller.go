@@ -421,6 +421,7 @@ func (cc *CpuSetController) applyCpusetToContainer(podMeta metav1.ObjectMeta, co
 	returnContainerPath := pathToContainerCpusetFile
 	//And for our grand finale, we just "echo" the calculated cpuset to the cpuset cgroupfs "file" of the given container
 	//Find child cpuset if it exists (kube-proxy)
+	controllerLogger.Info("Container Cpuset File Path", logger.Any("pathToContainerCpusetFile", pathToContainerCpusetFile))
 	err = filepath.Walk(pathToContainerCpusetFile, func(path string, f os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -430,6 +431,7 @@ func (cc *CpuSetController) applyCpusetToContainer(podMeta metav1.ObjectMeta, co
 		}
 		return nil
 	})
+	controllerLogger.Info("Container Cpuset File Path by filepath.Walk", logger.Any("pathToContainerCpusetFile", pathToContainerCpusetFile))
 	if err != nil {
 		return "", fmt.Errorf("%s child cpuset path error: %s", containerID, err.Error())
 	}
