@@ -68,4 +68,4 @@ jobs:
           tags: ${{ matrix.image }}
       - name: Test ${{ matrix.name }}
         run: |
-          docker pull ${{ matrix.image}}:${{ matrix.name }}
+          docker pull ${{ matrix.image}}
