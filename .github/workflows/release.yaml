@@ -44,7 +44,7 @@ jobs:
           echo "::set-output name=git-version::$(git describe --tags --always)"
       - id: git-branch
         run: |
-          echo "::set-output name=git-branch::$(echo ${GITHUB_REF##*/} | tr '[A-Z]' '[a-z]')
+          echo "::set-output name=git-branch::$(echo ${GITHUB_REF##*/} | tr '[A-Z]' '[a-z]')"
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2 
