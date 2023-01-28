@@ -16,6 +16,10 @@ limitations under the License.
 
 package checkpoint
 
+import (
+	cp "k8s.io/kubernetes/pkg/kubelet/cm/devicemanager/checkpoint"
+)
+
 // PodDevicesEntry is representing Pod specific deviceID allocations from kubelet checkpoint file structure - valid until K8s 1.20
 // TODO: REMOVE THIS TPYE AFTER 1.20 SUPPORT IS DROPPED
 type PodDevicesEntry struct {
@@ -31,7 +35,7 @@ type NewPodDevicesEntry struct {
 	PodUID        string
 	ContainerName string
 	ResourceName  string
-	DeviceIDs     map[int64][]string
+	DeviceIDs     cp.DevicesPerNUMA //map[int64][]string
 }
 
 // File is representing the kubelet checkpoint file structure with only relevant fields - valid until K8s 1.20
