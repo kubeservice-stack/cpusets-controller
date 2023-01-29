@@ -1,6 +1,9 @@
 # 基于节点cpu精细化调度：cpusets-controller
 [![Docker publish](https://github.com/kubeservice-stack/cpusets-controller/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kubeservice-stack/cpusets-controller/actions/workflows/ci.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubeservice-stack/cpusets-controller)](https://goreportcard.com/report/github.com/kubeservice-stack/cpusets-controller)
+[![Go Reference](https://pkg.go.dev/badge/github.com/kubeservice-stack/lxcfs-webhook.svg)](https://pkg.go.dev/github.com/kubeservice-stack/lxcfs-webhook)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 
 **问：在 Kubernetes 中，运行多个集群节点是否存在隐藏成本？**
 答：是的，因为并非 Kubernetes 节点中的所有 `CPU` 和 `Memory` 都可用于运行 `Pod`。
