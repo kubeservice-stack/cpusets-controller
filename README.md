@@ -15,17 +15,17 @@
 
 Node预留CPU资源 reservedCPUs = KubeReservedCPUs + SystemReservedCPUs + HardEvictionThresholds ， 并向上取整，最终最为reserved cpus
 
-![](https://www.kuberservice.cn/img/k8s-kubelet/cpu-manager.png)
+![](https://www.kubeservice.cn/img/k8s-kubelet/cpu-manager.png)
 
 虽然，对预留资源做了`限制`，但对于具体的`核没有做到绑核`运行。如果需要对Pod进行`绑核、亲核`部署 就再精细化实现了
 
-![](https://www.kuberservice.cn/img/k8s-kubelet/cpu-manager-reserved.png)
+![](https://www.kubeservice.cn/img/k8s-kubelet/cpu-manager-reserved.png)
 
 
 ## 场景
 
 如果需要对 `kubernetes` 中使用 `CPU 管理器` 进行如下更加精细化管理：
-![](https://www.kuberservice.cn/img/k8s-kubelet/cpu-pooler.png)
+![](https://www.kubeservice.cn/img/k8s-kubelet/cpu-pooler.png)
 
 - 解决在一个容器中可以同时使用独占cpu和共享cpu
 - 支持conatiner级别 core亲和 和 绑核
@@ -54,7 +54,7 @@ Node预留CPU资源 reservedCPUs = KubeReservedCPUs + SystemReservedCPUs + HardE
 - CPU共享
 - CPU默认（兼容默认cpu方式）
 
-![](https://www.kuberservice.cn/img/k8s-kubelet/cpuset.png)
+![](https://www.kubeservice.cn/img/k8s-kubelet/cpuset.png)
 
 
 包含 `3` 个核心组件：
@@ -64,7 +64,7 @@ Node预留CPU资源 reservedCPUs = KubeReservedCPUs + SystemReservedCPUs + HardE
 - `webhook`: 准入 Webhook验证, 校验 CPU 池特定的用户请求是否合法
 
 
-![](https://www.kuberservice.cn/img/k8s-kubelet/controller-cpuset.png)
+![](https://www.kubeservice.cn/img/k8s-kubelet/controller-cpuset.png)
 
 `Device Plugin` 的工作是通过现有的 `Device Plugin API` 将 `cpu分配` 作为`可消耗资源`注册给 `Kubelet`. `Device Plugin` 将 `CPU` 作为包含`物理CPU ID`列表的环境变量传递给容器。默认情况下，应用程序可以根据给定的 `CPU` 列表设置其进程 `CPU` 亲和力，或者可以将其留给标准的 `Linux Completely Fair Scheduler`。对于应用程序未实现设置其进程的 `CPU` 亲和力的功能的边缘情况，`CPU Pool`提供了代表应用程序设置它的机制。通过将应用程序进程信息配置到其 `Pod 规范`的注释字段来启用此选择加入功能。
 
@@ -80,7 +80,3 @@ Node预留CPU资源 reservedCPUs = KubeReservedCPUs + SystemReservedCPUs + HardE
 缺点：
 - 1)default 与 shared共享问题
 - 2)Kubelet CPU Manager 与 CPUSet Controller协同问题
-
-
-
-
