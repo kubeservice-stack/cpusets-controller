@@ -21,17 +21,17 @@ jobs:
           include:
           -
             name: cpusets-controller
-            image: kubeservice-stack/cpusets-controller
+            image: dongjiang1989/cpusets-controller
             file: ./hack/build/Dockerfile.cpusets
             platforms: linux/amd64,linux/arm64
           -
             name: cpusets-device-plugin
-            image: kubeservice-stack/cpusets-device-plugin
+            image: dongjiang1989/cpusets-device-plugin
             file: ./hack/build/Dockerfile.deviceplugin
             platforms: linux/amd64,linux/arm64
           -
             name: cpusets-webhook
-            image: kubeservice-stack/cpusets-webhook
+            image: dongjiang1989/cpusets-webhook
             file: ./hack/build/Dockerfile.webhook
             platforms: linux/amd64,linux/arm64
 
