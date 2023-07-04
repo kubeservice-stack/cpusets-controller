@@ -62,6 +62,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
+          context: .
           file: ${{ matrix.file }}
           platforms: ${{ matrix.platforms }}
           push: true
