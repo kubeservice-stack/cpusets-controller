@@ -1,0 +1,22 @@
+language: go
+
+sudo: required
+
+services:
+  - docker
+
+go:
+  - "1.16"
+
+install:
+  - go get -u golang.org/x/lint/golint
+  - go mod download
+
+script:
+  - golint -set_exit_status $(go list ./...)
+  - docker build -t cpudp -f build/Dockerfile.cpudp .
+  - docker build -t cpu-device-webhook -f build/Dockerfile.webhook .
+  - docker build -t cpusetter -f build/Dockerfile.cpusetter  .
+  - CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' github.com/nokia/CPU-Pooler/cmd/process-starter
+  - docker build -t ut -f build/Dockerfile.ut .
+  - docker run --mount type=bind,source=/home/travis/gopath/src/github.com/nokia/CPU-Pooler,target=/go/src/github.com/nokia/CPU-Pooler ut:latest /go/src/github.com/nokia/CPU-Pooler/scripts/run_tests.sh

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cpu-pooler-configmap
+  namespace: kube-system
+data:
+  poolconfig-controller.yaml: |
+    pools: 
+      exclusive-pool:
+        cpus : "4,5"
+        hyperThreadingPolicy: singleThreaded
+      exclusive-pool-2:
+        cpus : "2,3"
+        hyperThreadingPolicy: multiThreaded
+      shared-pool:
+        cpus : "1"
+      default:
+        cpus: "0"
+    nodeSelector:
+      nodeType: controller
+  poolconfig-dpdk.yaml: |
+    pools: 
+      exclusive-pool:
+        cpus : "2-7"
+      shared-pool:
+        cpus : "1"
+      default:
+        cpus: "0"
+    nodeSelector:
+      nodeType: dpdk
