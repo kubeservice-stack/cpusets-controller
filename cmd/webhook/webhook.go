@@ -14,7 +14,7 @@ import (
 
 	"github.com/kubeservice-stack/common/pkg/logger"
 	"github.com/kubeservice-stack/cpusets-controller/pkg/config"
-	"github.com/kubeservice-stack/cpusets-controller/pkg/types"
+	"github.com/kubeservice-stack/cpusets-controller/third_party/forked/nokia/CPU-Pooler/pkg/types"
 	"k8s.io/api/admission/v1beta1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

@@ -27,7 +27,7 @@ import (
 	"github.com/kubeservice-stack/cpusets-controller/pkg/client"
 	"github.com/kubeservice-stack/cpusets-controller/pkg/config"
 	"github.com/kubeservice-stack/cpusets-controller/pkg/controller"
-	"github.com/kubeservice-stack/cpusets-controller/pkg/types"
+	"github.com/kubeservice-stack/cpusets-controller/third_party/forked/nokia/CPU-Pooler/pkg/types"
 )
 
 const (
